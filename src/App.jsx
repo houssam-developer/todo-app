@@ -77,7 +77,19 @@ function App() {
 		btnAllRef.current.classList.remove('btn-active');
 		btnActiveRef.current.classList.remove('btn-active');
 		btnCompletedRef.current.classList.add('btn-active');
+	}
 
+	function handleBtnDeleteOneTaskEvent(e, targetTask) {
+		e.preventDefault();
+		console.log('handleBtnDeleteOneTaskEvent() #targetTask: ', targetTask);
+		const updatedTasks = tasks.filter(it => it.id !== targetTask.id);
+		setTasks(updatedTasks);
+	}
+
+	function handleBtnDeleteAllEvent(e) {
+		e.preventDefault();
+		console.log('handleBtnDeleteAll()');
+		setTasks([]);
 	}
 
 	return (
@@ -93,7 +105,7 @@ function App() {
 
 				{flagAll && <Tasks />}
 				{flagActive && <Tasks type='active' />}
-				{flagCompleted && <TasksCompleted />}
+				{flagCompleted && <TasksCompleted fnDeleteOneTask={handleBtnDeleteOneTaskEvent} fnDeleteAll={handleBtnDeleteAllEvent} />}
 
 			</main>
 
@@ -127,7 +139,8 @@ function App() {
 		)
 	}
 
-	function TasksCompleted() {
+	function TasksCompleted({ fnDeleteOneTask, fnDeleteAll }) {
+
 		return (
 			<div className='w-full max-w-[608px] mx-auto flex flex-col gap-5'>
 				<form className="container-all flex gap-4 sm:gap-6 md:gap-8">
@@ -146,7 +159,7 @@ function App() {
 											<input type="checkbox" id={`${it.id}`} checked={it.state === 'completed' ? true : false} onChange={(e) => handleCheckboxOnChangeEvent(e, it)} />
 											<label className={`text-[#333] font-sans text-lg font-medium ${it.state === 'completed' ? 'line-through' : ''}`} htmlFor={`${it.id}`}>{it.tag}</label>
 										</div>
-										<button className=''>
+										<button onClick={(e) => fnDeleteOneTask(e, it)}>
 											<svg className='w-[24px] h-[24px] text-[#444]' viewBox="0 0 24 24">
 												<path fill="currentColor" d="M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19M8,9H16V19H8V9M15.5,4L14.5,3H9.5L8.5,4H5V6H19V4H15.5Z" />
 											</svg>
@@ -156,12 +169,15 @@ function App() {
 							)
 					}
 				</ul>
-				<button className='ml-auto flex gap-2 bg-[#EB5757] justify-start items-center max-w-max text-[#fff] px-6 py-3 rounded font-sans text-[12px] font-semibold'>
-					<svg className='w-[14px] h-[14px] ' viewBox="0 0 24 24">
-						<path fill="currentColor" d="M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19M8,9H16V19H8V9M15.5,4L14.5,3H9.5L8.5,4H5V6H19V4H15.5Z" />
-					</svg>
-					<span>delete all</span>
-				</button>
+				{
+					tasks.length > 0 ?
+						<button onClick={fnDeleteAll} className='ml-auto flex gap-2 bg-[#EB5757] justify-start items-center max-w-max text-[#fff] px-6 py-3 rounded font-sans text-[12px] font-semibold'>
+							<svg className='w-[14px] h-[14px] ' viewBox="0 0 24 24">
+								<path fill="currentColor" d="M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19M8,9H16V19H8V9M15.5,4L14.5,3H9.5L8.5,4H5V6H19V4H15.5Z" />
+							</svg>
+							<span>delete all</span>
+						</button> : ''
+				}
 			</div>
 		)
 	}

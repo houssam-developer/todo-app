@@ -1,6 +1,5 @@
 
 import { useEffect, useRef, useState } from 'react';
-import Footer from './components/Footer';
 import { v4 as uuidv4 } from 'uuid';
 
 
@@ -9,7 +8,7 @@ function App() {
 
 	useEffect(() => {
 		const tasksSaved = JSON.parse(localStorage.getItem('tasks'));
-		console.log('tasksSaved: ', tasksSaved);
+
 		if (tasksSaved) {
 			setTasks(tasksSaved);
 		}
@@ -31,9 +30,9 @@ function App() {
 	const btnCompletedRef = useRef();
 
 	function handleCheckboxOnChangeEvent(e, targetTask) {
-		console.log('checkbox handler: ', e.target.checked);
+
 		const updatedTask = tasks.filter(it => it.id === targetTask.id)[0];
-		console.log('updatedTask: ', updatedTask);
+
 		if (e.target.checked) { updatedTask.state = 'completed' }
 		else { updatedTask.state = 'active'; }
 
@@ -47,8 +46,8 @@ function App() {
 
 	function handleBtnAll(e) {
 		//e.target.classList.add('btn-active');
-		console.log('handleBtnAll()');
-		console.log(btnAllRef);
+
+
 
 		setFlagActive(false);
 		setFlagCompleted(false);
@@ -61,8 +60,8 @@ function App() {
 	}
 
 	function handleBtnActive(e) {
-		console.log('handleBtnActive()');
-		console.log(btnActiveRef);
+
+
 
 
 		setFlagAll(false);
@@ -76,8 +75,8 @@ function App() {
 	}
 
 	function handleBtnCompleted(e) {
-		console.log('handleBtnCompleted()');
-		console.log(btnCompletedRef);
+
+
 
 
 		setFlagAll(false);
@@ -105,14 +104,14 @@ function App() {
 
 	function handleBtnDeleteOneTaskEvent(e, targetTask) {
 		e.preventDefault();
-		console.log('handleBtnDeleteOneTaskEvent() #targetTask: ', targetTask);
+
 		const updatedTasks = tasks.filter(it => it.id !== targetTask.id);
 		setTasks(updatedTasks);
 	}
 
 	function handleBtnDeleteAllEvent(e) {
 		e.preventDefault();
-		console.log('handleBtnDeleteAll()');
+
 
 		const updatedTasks = tasks.filter(it => it.state !== 'completed');
 		setTasks(updatedTasks);
@@ -122,7 +121,7 @@ function App() {
 		<div className="flex flex-col items-center gap-10 max-w-[768px] mx-auto px-2 py-6 h-screen">
 			<h1 className='text-center'>#todo</h1>
 
-			<main className='w-full max-w-[608px] mx-auto flex flex-col gap-5'>
+			<main className='w-full max-w-[608px] mx-auto flex flex-col gap-5 flex-grow'>
 				<nav className='border-b-[1px] border-[#bdbdbd] flex justify-around w-full pb-3 font-sans font-semibold text-[#333] text-sm'>
 					<button ref={btnAllRef} className='btn-active border-b-2 border-transparent' onClick={handleBtnAll}>All</button>
 					<button ref={btnActiveRef} className='border-b-2 border-transparent' onClick={handleBtnActive}>Active</button>
@@ -135,7 +134,9 @@ function App() {
 
 			</main>
 
-			{/* <Footer></Footer> */}
+			<footer>
+				<p className="text-[#4f4f4f] text-center p-4 font-medium">created by <span className='font-bold'>houssam-developer</span> - devChallenges.io</p>
+			</footer>
 		</div>
 	)
 

@@ -5,12 +5,22 @@ import { v4 as uuidv4 } from 'uuid';
 
 
 function App() {
-	const [tasks, setTasks] = useState([
-		{ id: uuidv4(), tag: 'Do coding challenges', state: 'completed', },
-		{ id: uuidv4(), tag: 'Finish the project', state: 'active', },
-		{ id: uuidv4(), tag: 'Apply to main jobs', state: 'active', },
-		{ id: uuidv4(), tag: 'Apply to secondary jobs', state: 'active', },
-	]);
+	const [tasks, setTasks] = useState([]);
+
+	useEffect(() => {
+		const tasksSaved = JSON.parse(localStorage.getItem('tasks'));
+		console.log('tasksSaved: ', tasksSaved);
+		if (tasksSaved) {
+			setTasks(tasksSaved);
+		}
+	}, []);
+
+	useEffect(() => {
+		if (tasks.length > 0) {
+			localStorage.setItem('tasks', JSON.stringify(tasks));
+		}
+	}, [tasks]);
+
 
 	const [flagAll, setFlagAll] = useState(true);
 	const [flagActive, setFlagActive] = useState(false);
@@ -103,11 +113,13 @@ function App() {
 	function handleBtnDeleteAllEvent(e) {
 		e.preventDefault();
 		console.log('handleBtnDeleteAll()');
-		setTasks([]);
+
+		const updatedTasks = tasks.filter(it => it.state !== 'completed');
+		setTasks(updatedTasks);
 	}
 
 	return (
-		<div className="flex flex-col items-center gap-10 max-w-[768px] mx-auto px-2 py-6 border-4 border-orange-400 h-screen">
+		<div className="flex flex-col items-center gap-10 max-w-[768px] mx-auto px-2 py-6 h-screen">
 			<h1 className='text-center'>#todo</h1>
 
 			<main className='w-full max-w-[608px] mx-auto flex flex-col gap-5'>
@@ -157,11 +169,6 @@ function App() {
 
 		return (
 			<div className='w-full max-w-[608px] mx-auto flex flex-col gap-5'>
-				<form className="container-all flex gap-4 sm:gap-6 md:gap-8">
-					<input className='max-w-[55vw] sm:max-w-none border-[1px] flex-grow  py-3 px-2 focus:outline-1 rounded-xl  text-sm' type="text" placeholder='add details' />
-					<button className='bg-[#2F80ED] text-white px-8 py-2 rounded-xl text-sm'>Add</button>
-				</form>
-
 				<ul className='flex flex-col gap-2'>
 					{
 						tasks
@@ -184,7 +191,7 @@ function App() {
 					}
 				</ul>
 				{
-					tasks.length > 0 ?
+					tasks.filter(it => it.state === 'completed').length > 0 ?
 						<button onClick={fnDeleteAll} className='ml-auto flex gap-2 bg-[#EB5757] justify-start items-center max-w-max text-[#fff] px-6 py-3 rounded font-sans text-[12px] font-semibold'>
 							<svg className='w-[14px] h-[14px] ' viewBox="0 0 24 24">
 								<path fill="currentColor" d="M6,19A2,2 0 0,0 8,21H16A2,2 0 0,0 18,19V7H6V19M8,9H16V19H8V9M15.5,4L14.5,3H9.5L8.5,4H5V6H19V4H15.5Z" />

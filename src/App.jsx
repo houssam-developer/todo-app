@@ -9,9 +9,7 @@ function App() {
 	useEffect(() => {
 		const tasksSaved = JSON.parse(localStorage.getItem('tasks'));
 
-		if (tasksSaved) {
-			setTasks(tasksSaved);
-		}
+		if (tasksSaved) { setTasks(tasksSaved); }
 	}, []);
 
 	useEffect(() => {
@@ -45,10 +43,6 @@ function App() {
 	}
 
 	function handleBtnAll(e) {
-		//e.target.classList.add('btn-active');
-
-
-
 		setFlagActive(false);
 		setFlagCompleted(false);
 		setFlagAll(true);
@@ -60,10 +54,6 @@ function App() {
 	}
 
 	function handleBtnActive(e) {
-
-
-
-
 		setFlagAll(false);
 		setFlagCompleted(false);
 		setFlagActive(true);
@@ -71,14 +61,9 @@ function App() {
 		btnAllRef.current.classList.remove('btn-active');
 		btnCompletedRef.current.classList.remove('btn-active');
 		btnActiveRef.current.classList.add('btn-active');
-
 	}
 
 	function handleBtnCompleted(e) {
-
-
-
-
 		setFlagAll(false);
 		setFlagActive(false);
 		setFlagCompleted(true);
@@ -91,7 +76,6 @@ function App() {
 	function handleNewTaskEvent(e) {
 		e.preventDefault();
 		const formData = new FormData(e.target);
-
 		const taskData = Array.from(formData.entries()).map(it => it);
 		const newTaskTag = taskData[0][0] === 'new-task' ? taskData[0][1] : '';
 
@@ -104,15 +88,12 @@ function App() {
 
 	function handleBtnDeleteOneTaskEvent(e, targetTask) {
 		e.preventDefault();
-
 		const updatedTasks = tasks.filter(it => it.id !== targetTask.id);
 		setTasks(updatedTasks);
 	}
 
 	function handleBtnDeleteAllEvent(e) {
 		e.preventDefault();
-
-
 		const updatedTasks = tasks.filter(it => it.state !== 'completed');
 		setTasks(updatedTasks);
 	}
@@ -120,7 +101,6 @@ function App() {
 	return (
 		<div className="flex flex-col items-center gap-10 max-w-[768px] mx-auto px-2 py-6 h-screen">
 			<h1 className='text-center'>#todo</h1>
-
 			<main className='w-full max-w-[608px] mx-auto flex flex-col gap-5 flex-grow'>
 				<nav className='border-b-[1px] border-[#bdbdbd] flex justify-around w-full pb-3 font-sans font-semibold text-[#333] text-sm'>
 					<button ref={btnAllRef} className='btn-active border-b-2 border-transparent' onClick={handleBtnAll}>All</button>

@@ -12,3 +12,20 @@ h1 {
 	font-family: 'Raleway', Arial, Helvetica, sans-serif;
 	font-size: 2.2rem;
 }
+
+button.btn-active {
+	position: relative;
+	border-bottom: 2px solid transparent;
+}
+
+button.btn-active::after {
+	position: absolute;
+	content: '';
+	bottom: -1rem;
+	left: -50%;
+	right: 0;
+	width: 200%;
+
+	border-bottom: 3px solid #2F80ED;
+	border-radius: 5px;
+}

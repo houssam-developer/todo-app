@@ -12,7 +12,7 @@ function App() {
 		{ id: uuidv4(), tag: 'Apply to secondary jobs', state: 'active', },
 	]);
 
-	const [flagAll, setFlagAll] = useState(false);
+	const [flagAll, setFlagAll] = useState(true);
 	const [flagActive, setFlagActive] = useState(false);
 	const [flagCompleted, setFlagCompleted] = useState(false);
 
@@ -79,6 +79,20 @@ function App() {
 		btnCompletedRef.current.classList.add('btn-active');
 	}
 
+	function handleNewTaskEvent(e) {
+		e.preventDefault();
+		const formData = new FormData(e.target);
+
+		const taskData = Array.from(formData.entries()).map(it => it);
+		const newTaskTag = taskData[0][0] === 'new-task' ? taskData[0][1] : '';
+
+		if (newTaskTag === '') { return; }
+
+		const newTask = { id: uuidv4(), tag: newTaskTag, state: 'active' };
+
+		setTasks([newTask, ...tasks]);
+	}
+
 	function handleBtnDeleteOneTaskEvent(e, targetTask) {
 		e.preventDefault();
 		console.log('handleBtnDeleteOneTaskEvent() #targetTask: ', targetTask);
@@ -98,13 +112,13 @@ function App() {
 
 			<main className='w-full max-w-[608px] mx-auto flex flex-col gap-5'>
 				<nav className='border-b-[1px] border-[#bdbdbd] flex justify-around w-full pb-3 font-sans font-semibold text-[#333] text-sm'>
-					<button ref={btnAllRef} className='border-b-2 border-transparent' onClick={handleBtnAll}>All</button>
+					<button ref={btnAllRef} className='btn-active border-b-2 border-transparent' onClick={handleBtnAll}>All</button>
 					<button ref={btnActiveRef} className='border-b-2 border-transparent' onClick={handleBtnActive}>Active</button>
 					<button ref={btnCompletedRef} className='border-b-2 border-transparent' onClick={handleBtnCompleted}>Completed</button>
 				</nav>
 
-				{flagAll && <Tasks />}
-				{flagActive && <Tasks type='active' />}
+				{flagAll && <Tasks fnNewTaskEvent={handleNewTaskEvent} />}
+				{flagActive && <Tasks type='active' fnNewTaskEvent={handleNewTaskEvent} />}
 				{flagCompleted && <TasksCompleted fnDeleteOneTask={handleBtnDeleteOneTaskEvent} fnDeleteAll={handleBtnDeleteAllEvent} />}
 
 			</main>
@@ -113,12 +127,12 @@ function App() {
 		</div>
 	)
 
-	function Tasks({ type = '' }) {
+	function Tasks({ type = '', fnNewTaskEvent }) {
 		return (
 			<div className='w-full max-w-[608px] mx-auto flex flex-col gap-5'>
-				<form className="container-all flex gap-4 sm:gap-6 md:gap-8">
-					<input className='max-w-[55vw] sm:max-w-none border-[1px] flex-grow  py-3 px-2 focus:outline-1 rounded-xl  text-sm' type="text" placeholder='add details' />
-					<button className='bg-[#2F80ED] text-white px-8 py-2 rounded-xl text-sm'>Add</button>
+				<form className="container-all flex gap-4 sm:gap-6 md:gap-8" onSubmit={fnNewTaskEvent}>
+					<input name='new-task' className='max-w-[55vw] sm:max-w-none border-[1px] flex-grow  py-3 px-2 focus:outline-1 rounded-xl  text-sm' type="text" placeholder='add details' />
+					<button type='submt' className='bg-[#2F80ED] text-white px-8 py-2 rounded-xl text-sm'>Add</button>
 				</form>
 
 				<ul className='flex flex-col gap-2'>
